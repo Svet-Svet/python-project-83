@@ -21,8 +21,8 @@ package-install:
 test-coverage:
 	poetry run pytest --cov=hexlet_python_package --cov-report xml
 
-#lint: FIXME
-#	poetry run flake8 page_analyzer/app.py
+lint:
+	poetry run flake8 page_analyzer/app.py
 
 selfcheck:
 	poetry check
