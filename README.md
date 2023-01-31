@@ -20,6 +20,10 @@ A Page Analyzer
 [![Github Actions Status](https://github.com/Svet-Svet/python-project-83/workflows/Python%20CI/badge.svg)](https://github.com/Svet-Svet/python-project-83/actions)
 
 
+## How does it work
+
+Now i don`t understand how its work, but i have a link to Railway — service to deploy. If you wanna you can see a deploy [here](https://railway.app/project/5099335b-698d-4824-8c88-266602a89cff/service/c9cb75bb-6e54-4003-9c0f-b41958c42dc4).
+
 ## Dependencies
 
 - Python = "^3.9"
