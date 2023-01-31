@@ -1,2 +1,43 @@
-### Hexlet tests and linter status:
+</div>
+
+<div id="badges">
+  <a href="https://www.linkedin.com/in/sviatoslav-ivanov-66a490182/">
+    <img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
+  </a>
+</div>
+
+<img src="https://komarev.com/ghpvc/?username=Svet-Svet&style=flat-square&color=blue" alt=""/>
+
+<h1>
+A Page Analyzer
+  <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="30px"/>
+</h1>
+
+
+
+## Hexlet tests and linter status:
 [![Actions Status](https://github.com/Svet-Svet/python-project-83/workflows/hexlet-check/badge.svg)](https://github.com/Svet-Svet/python-project-83/actions)
+[![Github Actions Status](https://github.com/Svet-Svet/python-project-83/workflows/Python%20CI/badge.svg)](https://github.com/Svet-Svet/python-project-83/actions)
+
+
+## Dependencies
+
+- Python = "^3.9"
+- pytest = "^7.1.2"
+- flake8 = "^5.0.4"
+- Flask = "^2.2.2"
+- Gunicorn = "^20.1.0"
+
+## Installation:
+
+**Use the package manager pip:**
+```
+pip install --user git+https://github.com/Svet-Svet/python-project-83
+```
+**Or you can clone repository and use poetry:**
+```
+git clone https://github.com/Svet-Svet/python-project-83
+cd python-project-83
+make build
+make package-install
+```
