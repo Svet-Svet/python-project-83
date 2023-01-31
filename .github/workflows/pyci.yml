@@ -25,6 +25,6 @@ jobs:
       - name: Run linter
         run: |
           make lint
-      - name: Run pytest
+#      - name: Run pytest
 #        run: | FIXME
 #          make test
