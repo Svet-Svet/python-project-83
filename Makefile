@@ -9,9 +9,6 @@ install:
 #test: FIXME
 #	poetry run pytest
 
-#run: FIXME
-#	poetry run page_analyzer
-
 publish:
 	poetry publish --dry-run
 
