@@ -6,8 +6,8 @@ start:
 install:
 	poetry install
 
-#test: FIXME
-#	poetry run pytest
+test:
+	poetry run pytest
 
 publish:
 	poetry publish --dry-run
