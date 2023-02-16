@@ -5,7 +5,14 @@
 {% endblock %}
 
 {% block body %}
-        <main class="flex-grow-1">
+
+    <main class="flex-grow-1">
+        <div class="flashes">
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+            {% block content %} {% endblock %}
+    </div>
         <div class="container-lg mt-3">
         <h1></h1>
         <div class="row">
