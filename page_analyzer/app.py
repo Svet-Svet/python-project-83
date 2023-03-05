@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, get_flashed_messages
 from validators import url
-from page_analyzer.db import add_data, add_side, show_page, check_identity
+from page_analyzer.db import add_data, add_side, show_page, check_identity, check_site
 
 from page_analyzer.additional_func import normalize_url
 
@@ -18,38 +18,44 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/urls', methods=['POST', 'GET'])
-def get_urls():
-    if request.method == 'POST':
-        url_name = request.form['url']
+@app.post('/urls')
+def post_urls():
+    url_name = request.form['url']
 
-        if len(url_name) >= MAX_LENGHT_URL:
-            flash('URL превышает 255 символов', 'error')
-            return redirect(url_for('index'))
+    if len(url_name) >= MAX_LENGHT_URL:
+        flash('URL превышает 255 символов', 'error')
+        return redirect(url_for('index'))
 
-        if url(url_name):
-            normal_name = normalize_url(url_name)
-            url_from_db = check_identity(normal_name)
+    if url(url_name):
+        normal_name = normalize_url(url_name)
+        url_from_db = check_identity(normal_name)
 
-            if url_from_db != False:
-                flash('Страница уже существует', 'success')
-                id = url_from_db[0]['id']
-                return redirect(url_for('get_page', id=id))
-
-            id = add_data(normal_name)
-            flash('Страница успешно добавлена', 'success')
+        if url_from_db != False:
+            flash('Страница уже существует', 'success')
+            id = url_from_db[0]['id']
             return redirect(url_for('get_page', id=id))
-        else:
-            flash('Некорректный URL', 'error')
-            return redirect(url_for('index'))
-    else:
-        return render_template('urls.html', urls=add_side())
 
+        id = add_data(normal_name)
+        flash('Страница успешно добавлена', 'success')
+        return redirect(url_for('get_page', id=id))
+    else:
+        flash('Некорректный URL', 'error')
+        return redirect(url_for('index'))
+
+
+@app.get('/urls')
+def get_urls():
+    return render_template('urls.html', urls=add_side())
 
 @app.route('/urls/<int:id>', methods=['POST', 'GET'])
 def get_page(id):
     urls = show_page(id)
     return render_template('urls_id.html', url=urls)
+
+
+@app.route('/urls/<id>/checks', methods=['POST'])
+def checks_site(id):
+    check_site()
 
 
 if __name__ == '__main__':

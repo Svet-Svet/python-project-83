@@ -16,6 +16,7 @@ A Page Analyzer
 
 
 ## Hexlet tests and linter status:
+[![Maintainability](https://api.codeclimate.com/v1/badges/25eadf2c89e76a174117/maintainability)](https://codeclimate.com/github/Svet-Svet/python-project-83/maintainability)
 [![Actions Status](https://github.com/Svet-Svet/python-project-83/workflows/hexlet-check/badge.svg)](https://github.com/Svet-Svet/python-project-83/actions)
 [![Github Actions Status](https://github.com/Svet-Svet/python-project-83/workflows/Python%20CI/badge.svg)](https://github.com/Svet-Svet/python-project-83/actions)
 

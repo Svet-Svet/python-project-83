@@ -79,3 +79,23 @@ def show_page(id):
     connection.close()
 
     return page
+
+
+def check_site(url):
+    connection = get_conn()
+    cursor = connection.cursor()
+
+    insert_table = f'''INSERT INTO url_checks (url_id, 
+                                                status_code, 
+                                                h1, 
+                                                title, 
+                                                description, 
+                                                created_at) 
+                                                VALUES (%s, %s, %s, %s, %s, %s)'''
+    cursor.execute(insert_table)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+
+
