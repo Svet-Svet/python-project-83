@@ -81,21 +81,38 @@ def show_page(id):
     return page
 
 
-def check_site(url):
+def check_site(id_from_url_table):
     connection = get_conn()
     cursor = connection.cursor()
 
-    insert_table = f'''INSERT INTO url_checks (url_id, 
-                                                status_code, 
-                                                h1, 
-                                                title, 
-                                                description, 
-                                                created_at) 
-                                                VALUES (%s, %s, %s, %s, %s, %s)'''
+    insert_table = f'''INSERT INTO url_checks (url_id, created_at) VALUES ('{id_from_url_table}', now())
+    RETURNING id'''
     cursor.execute(insert_table)
+
+    id_of_new_row = cursor.fetchone()[0]
     connection.commit()
     cursor.close()
     connection.close()
+
+    return id_of_new_row
+
+
+def show_page_checks(id):
+    connection = get_conn()
+    cursor = connection.cursor()
+
+    page = f'''SELECT * FROM url_checks WHERE url_id = '{id}';'''
+    cursor.execute(page)
+
+    data = cursor.fetchall()
+    page = list()
+    for all in data:
+        page.append({'id': all[0], 'url_id': all[1], 'created_at': all[2]})
+
+    cursor.close()
+    connection.close()
+
+    return page
 
 
 

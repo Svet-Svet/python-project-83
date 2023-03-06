@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, get_flashed_messages
 from validators import url
-from page_analyzer.db import add_data, add_side, show_page, check_identity, check_site
+from page_analyzer.db import add_data, add_side, show_page, check_identity, check_site, show_page_checks
 
 from page_analyzer.additional_func import normalize_url
 
@@ -47,15 +47,21 @@ def post_urls():
 def get_urls():
     return render_template('urls.html', urls=add_side())
 
+
 @app.route('/urls/<int:id>', methods=['POST', 'GET'])
 def get_page(id):
     urls = show_page(id)
-    return render_template('urls_id.html', url=urls)
+    url_check = show_page_checks(id)
+    return render_template('urls_id.html', url=urls, url_for_check=url_check)
 
 
-@app.route('/urls/<id>/checks', methods=['POST'])
-def checks_site(id):
-    check_site()
+@app.route('/urls/<id>/checks', methods=['POST', 'GET'])
+def checks_site_data(id):
+    generally_page = show_page(id)
+    generally_id = generally_page[0]['id']
+    check_site(generally_id)
+
+    return redirect(url_for('get_page', id=generally_id))
 
 
 if __name__ == '__main__':
