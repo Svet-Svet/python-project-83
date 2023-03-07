@@ -56,11 +56,16 @@ def check_identity(url):
         page = list()
         for all in data:
             page.append({'id': all[0], 'name': all[1], 'created_at': all[2]})
+
+        cursor.close()
+        connection.close()
         return page
 
-    cursor.close()
-    connection.close()
-    return False
+    else:
+        cursor.close()
+        connection.close()
+
+        return False
 
 
 def show_page(id):
@@ -107,12 +112,11 @@ def show_page_checks(id):
     data = cursor.fetchall()
     page = list()
     for all in data:
-        page.append({'id': all[0], 'url_id': all[1], 'created_at': all[2]})
+        page.append({'id': all[0], 'url_id': all[1], 'status_code': all[2], 'h1': all[3],
+                     'title': all[4], 'description': all[5], 'created_at': all[6]})
 
     cursor.close()
     connection.close()
 
     return page
-
-
 

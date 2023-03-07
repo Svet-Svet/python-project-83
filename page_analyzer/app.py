@@ -55,7 +55,7 @@ def get_page(id):
     return render_template('urls_id.html', url=urls, url_for_check=url_check)
 
 
-@app.route('/urls/<id>/checks', methods=['POST', 'GET'])
+@app.route('/urls/<int:id>/checks', methods=['POST', 'GET'])
 def checks_site_data(id):
     generally_page = show_page(id)
     generally_id = generally_page[0]['id']

@@ -34,12 +34,11 @@
           </tbody>
         </table>
       </div>
-            {% endfor %}
         <h2 class="mt-5 mb-3">Проверки</h2>
-        <form method="post" action="/urls/<id>/checks">
+        <form method="post" action="/urls/{{ urls.id }}/checks">
         <input type="submit" class="btn btn-primary" value="Запустить проверку">
         </form>
-
+        {% endfor %}
       <div>
         <table class="table table-bordered table-hover mt-2" data-test="checks">
           <tbody>
