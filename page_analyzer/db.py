@@ -49,7 +49,7 @@ def check_identity(url):
     cursor.execute(check_url)
     answer = cursor.fetchall()
 
-    if answer:
+    if answer[0][0]:
         url_for_db = f'''SELECT * FROM url WHERE name = '{url}';'''
         cursor.execute(url_for_db)
         data = cursor.fetchall()

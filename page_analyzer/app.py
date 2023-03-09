@@ -61,6 +61,7 @@ def checks_site_data(id):
     generally_id = generally_page[0]['id']
     check_site(generally_id)
 
+    flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_page', id=generally_id))
 
 
