@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, get_flashed_messages
 from validators import url
 from page_analyzer.db import add_data, add_side, show_page, check_identity, check_site, show_page_checks
+import requests
 
 from page_analyzer.additional_func import normalize_url
 
@@ -8,7 +9,6 @@ app = Flask(__name__)
 app.config.update(
     SECRET_KEY='123456'
 )
-
 
 MAX_LENGHT_URL = 255
 
@@ -30,7 +30,7 @@ def post_urls():
         normal_name = normalize_url(url_name)
         url_from_db = check_identity(normal_name)
 
-        if url_from_db != False:
+        if url_from_db is not False:
             flash('Страница уже существует', 'success')
             id = url_from_db[0]['id']
             return redirect(url_for('get_page', id=id))
@@ -59,7 +59,15 @@ def get_page(id):
 def checks_site_data(id):
     generally_page = show_page(id)
     generally_id = generally_page[0]['id']
-    check_site(generally_id)
+    # NewConnectionError
+    try:
+        status_code = requests.get(generally_page[0]['name'])
+    except ConnectionError:
+        flash('Произошла ошибка при проверке', 'error')
+        return redirect(url_for('get_page', id=generally_id))
+
+    parser_status_code = status_code.status_code
+    check_site(generally_id, parser_status_code)
 
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_page', id=generally_id))
@@ -67,4 +75,3 @@ def checks_site_data(id):
 
 if __name__ == '__main__':
     app.run(debug=True)
-

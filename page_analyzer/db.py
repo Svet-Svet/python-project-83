@@ -86,11 +86,11 @@ def show_page(id):
     return page
 
 
-def check_site(id_from_url_table):
+def check_site(id_from_url_table, status_code):
     connection = get_conn()
     cursor = connection.cursor()
 
-    insert_table = f'''INSERT INTO url_checks (url_id, created_at) VALUES ('{id_from_url_table}', now())
+    insert_table = f'''INSERT INTO url_checks (url_id, status_code, created_at) VALUES ('{id_from_url_table}', '{status_code}', now())
     RETURNING id'''
     cursor.execute(insert_table)
 
