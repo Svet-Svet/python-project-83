@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, get_flashed_messages
 from validators import url
 from page_analyzer.db import add_data, add_side, show_page, check_identity, check_site, show_page_checks
+from requests.exceptions import RequestException
 import requests
 
 from page_analyzer.additional_func import normalize_url
+from page_analyzer.check import fill_answer
+
 
 app = Flask(__name__)
 app.config.update(
@@ -59,15 +62,19 @@ def get_page(id):
 def checks_site_data(id):
     generally_page = show_page(id)
     generally_id = generally_page[0]['id']
-    # NewConnectionError
+    generally_name = generally_page[0]['name']
+
     try:
-        status_code = requests.get(generally_page[0]['name'])
-    except ConnectionError:
+        obj_response = requests.get(generally_name, timeout=5)
+        obj_response.raise_for_status()
+    except RequestException:
         flash('Произошла ошибка при проверке', 'error')
         return redirect(url_for('get_page', id=generally_id))
 
-    parser_status_code = status_code.status_code
-    check_site(generally_id, parser_status_code)
+    parser_status_code = obj_response.status_code
+    h1_tag, title_tag, meta_tag = fill_answer(generally_name)
+
+    check_site(generally_id, parser_status_code, h1_tag, title_tag, meta_tag)
 
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_page', id=generally_id))

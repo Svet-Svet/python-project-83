@@ -27,13 +27,19 @@ def add_side():
     connection = get_conn()
     cursor = connection.cursor()
 
-    get_data = f'''SELECT * FROM url ORDER BY id DESC;'''
+    get_data = f'''SELECT * FROM (
+    SELECT DISTINCT ON (url.name) url.id, url.name, url_checks.status_code, url_checks.created_at AS created_at_url_checks
+    FROM url LEFT JOIN url_checks ON url.id = url_checks.url_id
+    ORDER BY url.name, created_at_url_checks DESC
+    ) AS MYTable
+ORDER BY MYTable.id DESC;'''
     cursor.execute(get_data)
 
     data = cursor.fetchall()
+    print(data)
     urls = list()
     for all in data:
-        urls.append({'id': all[0], 'name': all[1], 'created_at': all[2]})
+        urls.append({'id': all[0], 'name': all[1], 'status_code': all[2], 'created_at': all[3]})
 
     cursor.close()
     connection.close()
@@ -86,11 +92,11 @@ def show_page(id):
     return page
 
 
-def check_site(id_from_url_table, status_code):
+def check_site(id_from_url_table, status_code, h1, title, meta):
     connection = get_conn()
     cursor = connection.cursor()
 
-    insert_table = f'''INSERT INTO url_checks (url_id, status_code, created_at) VALUES ('{id_from_url_table}', '{status_code}', now())
+    insert_table = f'''INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) VALUES ('{id_from_url_table}', '{status_code}', '{h1}', '{title}', '{meta}', now())
     RETURNING id'''
     cursor.execute(insert_table)
 

@@ -20,9 +20,9 @@
                         {% for url in urls %}
                         <tr>
                             <td>{{ url.id }}</td>
-                            <td>{{ url.name }}</td>
-                            <td>{{ url.created_at }}</td>
-                            <td> {{ url.answer }}</td>
+                            <td>{{ url.name|urlize() }}</td>
+                            <td>{{ url.created_at|default('', true) }}</td>
+                            <td> {{ url.status_code|default('', true) }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
