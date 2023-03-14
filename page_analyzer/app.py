@@ -1,11 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, get_flashed_messages
-from validators import url
-from page_analyzer.db import add_data, add_side, show_page, check_identity, check_site, show_page_checks
-from requests.exceptions import RequestException
-import requests
+from flask import Flask, render_template, request
+from flask import redirect, url_for, flash
+
+from page_analyzer.db import add_data, add_side, show_page
+from page_analyzer.db import check_identity, check_site, show_page_checks
 
 from page_analyzer.additional_func import normalize_url
 from page_analyzer.check import fill_answer
+
+from validators import url
+from requests.exceptions import RequestException
+import requests
 
 
 app = Flask(__name__)

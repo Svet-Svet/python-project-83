@@ -24,20 +24,3 @@ SELECT * FROM url LEFT JOIN (
 ) AS last_checks
 ON url.id = last_checks.url_id;
 
-
-
-
-SELECT * FROM (
-    SELECT DISTINCT ON (url.name) url.id, url.name, status_code, url_checks.created_at AS created_at_url_checks
-    FROM url JOIN url_checks ON url.id = url_checks.url_id
-    ORDER BY url.name
-    )
-ORDER BY url.id DESC;
-
-
-SELECT * FROM (
-    SELECT DISTINCT ON (url.name) url.id, url.name, url_checks.status_code, url_checks.created_at AS created_at_url_checks
-    FROM url LEFT JOIN url_checks ON url.id = url_checks.url_id
-    ORDER BY url.name
-    ) AS MYTable
-ORDER BY MYTable.id DESC;
