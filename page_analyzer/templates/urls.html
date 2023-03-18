@@ -20,7 +20,7 @@
                         {% for url in urls %}
                         <tr>
                             <td>{{ url.id }}</td>
-                            <td>{{ url.name|urlize() }}</td>
+                            <td><a href="{{ url_for('get_page', id=url.id) }}">{{ url.name }}</a></td>
                             <td>{{ url.created_at|default('', true) }}</td>
                             <td> {{ url.status_code|default('', true) }}</td>
                         </tr>
