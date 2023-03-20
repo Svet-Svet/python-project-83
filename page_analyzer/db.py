@@ -12,7 +12,7 @@ def add_data(url):
     connection = get_conn()
     cursor = connection.cursor()
 
-    insert_table = f'''INSERT INTO url (name, created_at) VALUES ('{url}', now())
+    insert_table = f'''INSERT INTO urls (name, created_at) VALUES ('{url}', now())
     RETURNING id'''
     cursor.execute(insert_table)
     id_of_new_row = cursor.fetchone()[0]
@@ -28,9 +28,9 @@ def add_side():
     cursor = connection.cursor()
 
     get_data = f'''SELECT * FROM (
-    SELECT DISTINCT ON (url.name) url.id, url.name, url_checks.status_code, url_checks.created_at AS created_at_url_checks
-    FROM url LEFT JOIN url_checks ON url.id = url_checks.url_id
-    ORDER BY url.name, created_at_url_checks DESC
+    SELECT DISTINCT ON (urls.name) urls.id, urls.name, url_checks.status_code, url_checks.created_at AS created_at_url_checks
+    FROM urls LEFT JOIN url_checks ON urls.id = url_checks.url_id
+    ORDER BY urls.name, created_at_url_checks DESC
     ) AS MYTable
 ORDER BY MYTable.id DESC;'''
     cursor.execute(get_data)
@@ -51,12 +51,12 @@ def check_identity(url):
     connection = get_conn()
     cursor = connection.cursor()
 
-    check_url = f'''SELECT EXISTS (SELECT * FROM url WHERE name = '{url}');'''
+    check_url = f'''SELECT EXISTS (SELECT * FROM urls WHERE name = '{url}');'''
     cursor.execute(check_url)
     answer = cursor.fetchall()
 
     if answer[0][0]:
-        url_for_db = f'''SELECT * FROM url WHERE name = '{url}';'''
+        url_for_db = f'''SELECT * FROM urls WHERE name = '{url}';'''
         cursor.execute(url_for_db)
         data = cursor.fetchall()
         page = list()
@@ -78,7 +78,7 @@ def show_page(id):
     connection = get_conn()
     cursor = connection.cursor()
 
-    get_last_page = f'''SELECT * FROM url WHERE id = '{id}';'''
+    get_last_page = f'''SELECT * FROM urls WHERE id = '{id}';'''
     cursor.execute(get_last_page)
 
     data = cursor.fetchall()

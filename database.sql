@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS url;
+DROP TABLE IF EXISTS urls;
 DROP TABLE IF EXISTS url_checks;
 
-CREATE TABLE url (
+CREATE TABLE urls (
     id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name varchar(255) UNIQUE NOT NULL,
     created_at date NOT NULL
@@ -17,10 +17,4 @@ CREATE TABLE url_checks (
     created_at date NOT NULL
 );
 
-SELECT * FROM url LEFT JOIN (
-	SELECT DISTINCT ON (url_id) url_id, status_code, created_at
-		FROM url_checks
-		ORDER BY url_id, status_code, created_at DESC
-) AS last_checks
-ON url.id = last_checks.url_id;
 
