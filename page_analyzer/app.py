@@ -47,7 +47,8 @@ def post_urls():
         return redirect(url_for('get_page', id=id))
     else:
         flash('Некорректный URL', 'error')
-        return redirect(url_for('index'))
+        return render_template('index.html'), 422
+        # return redirect(url_for('index'))
 
 
 @app.get('/urls')
