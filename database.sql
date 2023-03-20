@@ -9,7 +9,7 @@ CREATE TABLE urls (
 
 CREATE TABLE url_checks (
     id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    url_id int REFERENCES url (id),
+    url_id int REFERENCES urls (id),
     status_code int,
     h1 varchar(255),
     title varchar(255),
