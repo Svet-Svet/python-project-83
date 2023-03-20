@@ -29,9 +29,8 @@ def add_side():
     connection = get_conn()
     cursor = connection.cursor()
 
-    get_data = f'''SELECT * FROM (
-    SELECT DISTINCT ON (urls.name) urls.id, urls.name, url_checks.status_code, 
-    url_checks.created_at AS created_at_url_checks
+    get_data = '''SELECT * FROM (
+    SELECT DISTINCT ON (urls.name) urls.id, urls.name, url_checks.status_code, url_checks.created_at AS created_at_url_checks
     FROM urls LEFT JOIN url_checks ON urls.id = url_checks.url_id
     ORDER BY urls.name, created_at_url_checks DESC
     ) AS MYTable
