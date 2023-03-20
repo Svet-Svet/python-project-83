@@ -36,7 +36,6 @@ ORDER BY MYTable.id DESC;'''
     cursor.execute(get_data)
 
     data = cursor.fetchall()
-    print(data)
     urls = list()
     for all in data:
         urls.append({'id': all[0], 'name': all[1], 'status_code': all[2], 'created_at': all[3]})
