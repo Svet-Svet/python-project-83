@@ -98,7 +98,7 @@ def check_site(id_from_url_table, status_code, h1, title, meta):
     connection = get_conn()
     cursor = connection.cursor()
 
-    insert_table = '''INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) 
+    insert_table = '''INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at)
     VALUES (%s, %s, %s, %s, %s, %s)
     RETURNING id'''
     cursor.execute(insert_table, (id_from_url_table, status_code, h1, title, meta, datetime.now(),))
