@@ -53,12 +53,12 @@ def check_identity(url):
     connection = get_conn()
     cursor = connection.cursor()
 
-    check_url = f'''SELECT EXISTS (SELECT * FROM urls WHERE name = %s);'''
+    check_url = '''SELECT EXISTS (SELECT * FROM urls WHERE name = %s);'''
     cursor.execute(check_url, (url,))
     answer = cursor.fetchall()
 
     if answer[0][0]:
-        url_for_db = f'''SELECT * FROM urls WHERE name = %s;'''
+        url_for_db = '''SELECT * FROM urls WHERE name = %s;'''
         cursor.execute(url_for_db, (url,))
         data = cursor.fetchall()
         page = list()
@@ -80,7 +80,7 @@ def show_page(id):
     connection = get_conn()
     cursor = connection.cursor()
 
-    get_last_page = f'''SELECT * FROM urls WHERE id = %s;'''
+    get_last_page = '''SELECT * FROM urls WHERE id = %s;'''
     cursor.execute(get_last_page, (id,))
 
     data = cursor.fetchall()
@@ -98,7 +98,7 @@ def check_site(id_from_url_table, status_code, h1, title, meta):
     connection = get_conn()
     cursor = connection.cursor()
 
-    insert_table = f'''INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) 
+    insert_table = '''INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) 
     VALUES (%s, %s, %s, %s, %s, %s)
     RETURNING id'''
     cursor.execute(insert_table, (id_from_url_table, status_code, h1, title, meta, datetime.now(),))
@@ -115,7 +115,7 @@ def show_page_after_checking(id):
     connection = get_conn()
     cursor = connection.cursor()
 
-    page = f'''SELECT * FROM url_checks WHERE url_id = %s;'''
+    page = '''SELECT * FROM url_checks WHERE url_id = %s;'''
     cursor.execute(page, (id,))
 
     data = cursor.fetchall()
