@@ -8,7 +8,8 @@ import validators
 import requests
 
 from page_analyzer.db import add_data, show_all_page, show_page
-from page_analyzer.db import check_identity, check_site, show_page_after_checking
+from page_analyzer.db import check_identity, check_site
+from page_analyzer.db import show_page_after_checking
 
 from page_analyzer.additional_func import normalize_url
 from page_analyzer.check import fill_answer
