@@ -1,6 +1,7 @@
-import psycopg2
 import os
+import psycopg2
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -14,9 +15,9 @@ def add_data(url):
     connection = get_conn()
     cursor = connection.cursor()
 
-    insert_table = f'''INSERT INTO urls (name, created_at) VALUES ('{url}', now())
+    insert_table = '''INSERT INTO urls (name, created_at) VALUES (%s, %s)
     RETURNING id'''
-    cursor.execute(insert_table)
+    cursor.execute(insert_table, (url, datetime.now(),))
     id_of_new_row = cursor.fetchone()[0]
     connection.commit()
     cursor.close()
@@ -25,7 +26,7 @@ def add_data(url):
     return id_of_new_row
 
 
-def add_side():
+def show_all_page():
     connection = get_conn()
     cursor = connection.cursor()
 
@@ -52,13 +53,13 @@ def check_identity(url):
     connection = get_conn()
     cursor = connection.cursor()
 
-    check_url = f'''SELECT EXISTS (SELECT * FROM urls WHERE name = '{url}');'''
-    cursor.execute(check_url)
+    check_url = f'''SELECT EXISTS (SELECT * FROM urls WHERE name = %s);'''
+    cursor.execute(check_url, (url,))
     answer = cursor.fetchall()
 
     if answer[0][0]:
-        url_for_db = f'''SELECT * FROM urls WHERE name = '{url}';'''
-        cursor.execute(url_for_db)
+        url_for_db = f'''SELECT * FROM urls WHERE name = %s;'''
+        cursor.execute(url_for_db, (url,))
         data = cursor.fetchall()
         page = list()
         for all in data:
@@ -79,8 +80,8 @@ def show_page(id):
     connection = get_conn()
     cursor = connection.cursor()
 
-    get_last_page = f'''SELECT * FROM urls WHERE id = '{id}';'''
-    cursor.execute(get_last_page)
+    get_last_page = f'''SELECT * FROM urls WHERE id = %s;'''
+    cursor.execute(get_last_page, (id,))
 
     data = cursor.fetchall()
     page = list()
@@ -97,9 +98,10 @@ def check_site(id_from_url_table, status_code, h1, title, meta):
     connection = get_conn()
     cursor = connection.cursor()
 
-    insert_table = f'''INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) VALUES ('{id_from_url_table}', '{status_code}', '{h1}', '{title}', '{meta}', now())
+    insert_table = f'''INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) 
+    VALUES (%s, %s, %s, %s, %s, %s)
     RETURNING id'''
-    cursor.execute(insert_table)
+    cursor.execute(insert_table, (id_from_url_table, status_code, h1, title, meta, datetime.now(),))
 
     id_of_new_row = cursor.fetchone()[0]
     connection.commit()
@@ -109,12 +111,12 @@ def check_site(id_from_url_table, status_code, h1, title, meta):
     return id_of_new_row
 
 
-def show_page_checks(id):
+def show_page_after_checking(id):
     connection = get_conn()
     cursor = connection.cursor()
 
-    page = f'''SELECT * FROM url_checks WHERE url_id = '{id}';'''
-    cursor.execute(page)
+    page = f'''SELECT * FROM url_checks WHERE url_id = %s;'''
+    cursor.execute(page, (id,))
 
     data = cursor.fetchall()
     page = list()
