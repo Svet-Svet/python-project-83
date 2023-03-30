@@ -23,21 +23,22 @@ def add_data(connection, url):
 def get_all_page(connection):
     with connection.cursor() as cursor:
         get_data = '''
-        SELECT
-            * 
-        FROM (
-            SELECT 
-                DISTINCT ON (urls.name) 
-                urls.id, 
-                urls.name, 
-                url_checks.status_code, 
-                url_checks.created_at AS created_at_url_checks
-            FROM urls 
-            LEFT JOIN url_checks 
-                ON urls.id = url_checks.url_id
-            ORDER BY urls.name, created_at_url_checks DESC
-        ) AS MYTable
-        ORDER BY MYTable.id DESC'''
+            SELECT
+                * 
+            FROM (
+                SELECT 
+                    DISTINCT ON (urls.name) 
+                    urls.id, 
+                    urls.name, 
+                    url_checks.status_code, 
+                    url_checks.created_at AS created_at_url_checks
+                FROM urls 
+                LEFT JOIN url_checks 
+                    ON urls.id = url_checks.url_id
+                ORDER BY urls.name, created_at_url_checks DESC
+            ) AS MYTable
+            ORDER BY MYTable.id DESC
+            '''
         cursor.execute(get_data)
         data = cursor.fetchall()
         urls = list()
