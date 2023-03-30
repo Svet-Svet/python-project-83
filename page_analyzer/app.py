@@ -1,18 +1,16 @@
 import os
 
 from flask import Flask, render_template, request
-from flask import redirect, url_for, flash
+from flask import redirect, url_for, flash, g
 from requests.exceptions import RequestException
 from dotenv import load_dotenv
 import validators
 import requests
 
-from page_analyzer.db import add_data, show_all_page, show_page
-from page_analyzer.db import check_identity, check_site
-from page_analyzer.db import show_page_after_checking
-
 from page_analyzer.additional_func import normalize_url
 from page_analyzer.check import fill_answer
+
+from page_analyzer import db
 
 
 load_dotenv()
@@ -23,6 +21,22 @@ app.config.update(
 
 MAX_LENGHT_URL = 255
 TIMEOUT = 5
+
+
+def get_db():
+    """ Возвращает объект соединения с БД"""
+    database = getattr(g, '_database', None)
+    if database is None or database.closed:
+        database = g._database = db.get_connection()
+    return database
+
+
+@app.teardown_appcontext
+def close_connection(exception):
+    """Закрывает соединение с с БД"""
+    database = getattr(g, '_database', None)
+    if database is not None:
+        database.close()
 
 
 @app.route('/')
@@ -39,15 +53,16 @@ def post_urls():
         return redirect(url_for('index'))
 
     if validators.url(url_name):
+        connection = get_db()
         normal_name = normalize_url(url_name)
-        url_from_db = check_identity(normal_name)
+        url_from_db = db.check_identity(connection, normal_name)
 
         if url_from_db is not False:
             flash('Страница уже существует', 'success')
             id = url_from_db[0]['id']
             return redirect(url_for('get_page', id=id))
 
-        id = add_data(normal_name)
+        id = db.add_data(connection, normal_name)
         flash('Страница успешно добавлена', 'success')
         return redirect(url_for('get_page', id=id))
     else:
@@ -57,34 +72,37 @@ def post_urls():
 
 @app.get('/urls')
 def get_urls():
-    return render_template('urls.html', urls=show_all_page())
+    return render_template('urls.html', urls=db.get_all_page(get_db()))
 
 
-@app.route('/urls/<int:id>', methods=['POST', 'GET'])
+@app.get('/urls/<int:id>')
 def get_page(id):
-    urls = show_page(id)
-    url_check = show_page_after_checking(id)
+    connection = get_db()
+    urls = db.get_page(connection, id)
+    url_check = db.get_page_after_checking(connection, id)
     return render_template('urls_id.html', url=urls, url_for_check=url_check)
 
 
-@app.route('/urls/<int:id>/checks', methods=['POST', 'GET'])
+@app.post('/urls/<int:id>/checks')
 def check_seo(id):
-    generally_page = show_page(id)
+    connection = get_db()
+    generally_page = db.get_page(connection, id)
     generally_id = generally_page[0]['id']
     generally_name = generally_page[0]['name']
 
     try:
-        obj_response = requests.get(generally_name, timeout=TIMEOUT)
-        obj_response.raise_for_status()
+        response = requests.get(generally_name, timeout=TIMEOUT)
+        response.raise_for_status()
     except RequestException:
         flash('Произошла ошибка при проверке', 'error')
         return redirect(url_for('get_page', id=generally_id))
 
-    parser_status_code = obj_response.status_code
-    obj_html = obj_response.text
-    h1_tag, title_tag, meta_tag = fill_answer(obj_html)
+    parser_status_code = response.status_code
+    data_html = response.text
+    h1_tag, title_tag, meta_tag = fill_answer(data_html)
 
-    check_site(generally_id, parser_status_code, h1_tag, title_tag, meta_tag)
+    db.check_site(connection, generally_id, parser_status_code,
+                  h1_tag, title_tag, meta_tag)
 
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_page', id=generally_id))
