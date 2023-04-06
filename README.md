@@ -23,8 +23,7 @@ A Page Analyzer
 
 ## How does it work
 
-Now i don`t understand how its work, but i have a link to Railway — service to deploy. If you wanna you can see a deploy [here](https://railway.app/project/5099335b-698d-4824-8c88-266602a89cff/service/c9cb75bb-6e54-4003-9c0f-b41958c42dc4).
-
+This is Page Analyzer, a service for SEO analytics for your website. Simply enter your website's link in the search form, and Page Analyzer will provide you with information about your SEO titles and descriptions.
 ## Dependencies
 
 - Python = "^3.9"
@@ -46,3 +45,5 @@ cd python-project-83
 make build
 make package-install
 ```
+
+We use a Railway [here](https://railway.app/project/5099335b-698d-4824-8c88-266602a89cff/service/c9cb75bb-6e54-4003-9c0f-b41958c42dc4) for deploy.

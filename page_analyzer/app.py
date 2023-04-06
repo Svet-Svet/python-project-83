@@ -24,7 +24,7 @@ TIMEOUT = 5
 
 
 def get_db():
-    """ Возвращает объект соединения с БД"""
+    """ return object for communacation with BD"""
     database = getattr(g, '_database', None)
     if database is None or database.closed:
         database = g._database = db.get_connection()
@@ -33,7 +33,7 @@ def get_db():
 
 @app.teardown_appcontext
 def close_connection(exception):
-    """Закрывает соединение с с БД"""
+    """Closed communacation with BD"""
     database = getattr(g, '_database', None)
     if database is not None:
         database.close()
@@ -54,15 +54,15 @@ def post_urls():
 
     if validators.url(url_name):
         connection = get_db()
-        normal_name = normalize_url(url_name)
-        url_from_db = db.check_identity(connection, normal_name)
+        normalized_url = normalize_url(url_name)
+        url_from_db = db.check_identity(connection, normalized_url)
 
-        if url_from_db is not False:
+        if url_from_db is not None:
             flash('Страница уже существует', 'success')
-            id = url_from_db[0]['id']
+            id = url_from_db['id']
             return redirect(url_for('get_page', id=id))
 
-        id = db.add_data(connection, normal_name)
+        id = db.add_data(connection, normalized_url)
         flash('Страница успешно добавлена', 'success')
         return redirect(url_for('get_page', id=id))
     else:
@@ -72,7 +72,7 @@ def post_urls():
 
 @app.get('/urls')
 def get_urls():
-    return render_template('urls.html', urls=db.get_all_page(get_db()))
+    return render_template('urls.html', urls=db.get_all_pages(get_db()))
 
 
 @app.get('/urls/<int:id>')
@@ -101,8 +101,8 @@ def check_seo(id):
     data_html = response.text
     h1_tag, title_tag, meta_tag = fill_answer(data_html)
 
-    db.check_site(connection, generally_id, parser_status_code,
-                  h1_tag, title_tag, meta_tag)
+    db.add_check_info(connection, generally_id, parser_status_code,
+                      h1_tag, title_tag, meta_tag)
 
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_page', id=generally_id))

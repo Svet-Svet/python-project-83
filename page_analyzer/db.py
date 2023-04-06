@@ -20,7 +20,7 @@ def add_data(connection, url):
         return id_of_new_row
 
 
-def get_all_page(connection):
+def get_all_pages(connection):
     with connection.cursor() as cursor:
         get_data = '''SELECT * FROM (
             SELECT
@@ -52,12 +52,12 @@ def check_identity(connection, url):
             url_for_db = '''SELECT * FROM urls WHERE name = %s;'''
             cursor.execute(url_for_db, (url,))
             data = cursor.fetchall()
-            page = list()
+            page = dict()
             for all in data:
-                page.append({'id': all[0], 'name': all[1], 'created_at': all[2]})
+                page.update({'id': all[0], 'name': all[1], 'created_at': all[2]})
             return page
 
-        return False
+        return None
 
 
 def get_page(connection, id):
@@ -73,7 +73,7 @@ def get_page(connection, id):
         return page
 
 
-def check_site(connection, id_from_url_table, status_code, h1, title, meta):
+def add_check_info(connection, id_from_url_table, status_code, h1, title, meta):
     with connection.cursor() as cursor:
         insert_table = '''INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at)
         VALUES (%s, %s, %s, %s, %s, now())
