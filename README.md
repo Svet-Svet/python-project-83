@@ -23,7 +23,13 @@ A Page Analyzer
 
 ## How does it work
 
-This is Page Analyzer, a service for SEO analytics for your website. Simply enter your website's link in the search form, and Page Analyzer will provide you with information about your SEO titles and descriptions.
+This is Page Analyzer, a service for SEO analytics for your website.
+
+<img src="https://imgur.com/lBzTGlE.png" alt="logo" width="270" height="auto" />
+
+Simply enter your website's link in the search form, and Page Analyzer will provide you with information about your SEO titles and descriptions.
+
+<img src="https://imgur.com/6W5bNm3.png" alt="logo" width="270" height="auto" />
 ## Dependencies
 
 - Python = "^3.9"
