@@ -10,6 +10,7 @@ def fill_answer(obj_html):
     else:
         h1_tag = soup.h1.get_text()
         h1_tag = (h1_tag[:250] + '...') if len(h1_tag) > 250 else h1_tag
+        h1_tag = h1_tag.strip()
 
     title_tag = soup.find('title')
     if title_tag is None:

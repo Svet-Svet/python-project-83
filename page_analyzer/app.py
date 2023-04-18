@@ -58,6 +58,7 @@ def post_urls():
         url_from_db = db.check_identity(connection, normalized_url)
 
         if url_from_db is not None:
+            print(url_from_db)
             flash('Страница уже существует', 'success')
             id = url_from_db['id']
             return redirect(url_for('get_page', id=id))

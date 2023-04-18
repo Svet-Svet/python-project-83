@@ -15,6 +15,7 @@ psycopg2-binary = "^2.9.5"
 bs4 = "^0.0.1"
 validators = "^0.20.0"
 python-dotenv = "^1.0.0"
+pytest-mock = "^3.10.0"
 
 
 [tool.poetry.dev-dependencies]
