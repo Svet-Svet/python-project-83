@@ -1,4 +1,3 @@
-import pytest_mock
 import os
 import pytest
 import string
@@ -81,7 +80,7 @@ def test_post_urls_new_url(mock_connect, client):
     mock_cur = mock_con.cursor.return_value
     mock_cur.__enter__.return_value.fetchall.return_value = urls
 
-    test_url = 'https://habr.com/ru/all/'
+    test_url = 'https://habr.com/ru/'
     response = client.post('/urls', data={"url": test_url})
     assert response.status_code == 302
 
