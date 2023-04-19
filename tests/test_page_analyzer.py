@@ -1,4 +1,5 @@
 import pytest_mock
+import os
 import pytest
 import string
 import datetime
@@ -40,11 +41,16 @@ def test_normalize_url():
     assert response == 'https://ru.hexlet.io'
 
 
-def test_checking_add_seo():
-    html_object = 'tests/fixtures/test_data.html'
-    with open(html_object, encoding='utf8') as f:
+@pytest.fixture
+def html_test_data():
+    target_output = os.path.join(os.path.dirname(__file__), 'fixtures/test_data.html')
+    with open(target_output, encoding='utf8') as f:
         html = f.read()
-    h1_tag, title_tag, str_meta = fill_answer(html)
+    return html
+
+
+def test_checking_add_seo(html_test_data):
+    h1_tag, title_tag, str_meta = fill_answer(html_test_data)
     assert h1_tag == "Онлайн-школа программирования, за выпускниками которой охотятся компании"
     assert title_tag == "Хекслет — больше чем школа программирования. Онлайн курсы, сообщество программистов"
     assert str_meta == 'Живое онлайн сообщество программистов и разработчиков на JS, Python, Java, PHP, Ruby. Авторские программы обучения с практикой и готовыми проектами в резюме. Помощь в трудоустройстве после успешного окончания обучения'
@@ -58,7 +64,7 @@ def test_post_urls_long_url(client):
 
 @mock.patch('psycopg2.connect')
 def test_post_urls_exist_url(mock_connect, client):
-    urls = [(1, 'https://www.google.com/', datetime.datetime(2022, 5, 18), )]
+    urls = [(1, 'https://www.google.com/', datetime.datetime(2022, 5, 18),)]
     mock_con = mock_connect.return_value
     mock_cur = mock_con.cursor.return_value
     mock_cur.__enter__.return_value.fetchall.return_value = urls
