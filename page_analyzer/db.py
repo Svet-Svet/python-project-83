@@ -52,7 +52,6 @@ def check_identity(connection, url):
             url_for_db = '''SELECT * FROM urls WHERE name = %s;'''
             cursor.execute(url_for_db, (url,))
             data = cursor.fetchall()
-            print(data)
             page = dict()
             for all in data:
                 page.update({'id': all[0], 'name': all[1], 'created_at': all[2]})

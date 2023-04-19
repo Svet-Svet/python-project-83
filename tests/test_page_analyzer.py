@@ -74,6 +74,22 @@ def test_post_urls_exist_url(mock_connect, client):
 
 
 @mock.patch('psycopg2.connect')
+def test_post_urls_exist_url_flash_response(mock_connect, client):
+    urls = [(1, 'https://www.google.com/', datetime.datetime(2022, 5, 18),)]
+    mock_con = mock_connect.return_value
+    mock_cur = mock_con.cursor.return_value
+    mock_cur.__enter__.return_value.fetchall.side_effect = [
+        [(True,)],
+        urls,
+        urls,
+        []
+    ]
+    test_url = 'https://www.google.com/search?'
+    response = client.post('/urls', data={"url": test_url}, follow_redirects=True)
+    assert 'Страница уже существует' in response.text
+
+
+@mock.patch('psycopg2.connect')
 def test_post_urls_new_url(mock_connect, client):
     urls = [(1000000, 'https://habr.com/ru/all/', datetime.datetime(2022, 5, 18),)]
     mock_con = mock_connect.return_value
@@ -86,6 +102,21 @@ def test_post_urls_new_url(mock_connect, client):
 
 
 @mock.patch('psycopg2.connect')
+def test_post_urls_new_url_flash_response(mock_connect, client):
+    urls = [(1000000, 'https://habr.com/ru/', datetime.datetime(2022, 5, 18),)]
+    mock_con = mock_connect.return_value
+    mock_cur = mock_con.cursor.return_value
+    mock_cur.__enter__.return_value.fetchall.side_effect = [
+        [(False,)],
+        urls,
+        []
+    ]
+    test_url = 'https://habr.com/ru/'
+    response = client.post('/urls', data={"url": test_url}, follow_redirects=True)
+    assert 'Страница успешно добавлена' in response.text
+
+
+@mock.patch('psycopg2.connect')
 def test_post_urls_new_url_error(mock_connect, client):
     urls = [(1000, 'https://12232312', datetime.datetime(2022, 5, 18),)]
     mock_con = mock_connect.return_value
@@ -95,3 +126,19 @@ def test_post_urls_new_url_error(mock_connect, client):
     test_url = 'https://12232312'
     response = client.post('/urls', data={"url": test_url})
     assert response.status_code == 422
+
+
+@mock.patch('psycopg2.connect')
+def test_post_urls_new_url_error_flash_response(mock_connect, client):
+    urls = [(1000, 'https://12232312', datetime.datetime(2022, 5, 18),)]
+    mock_con = mock_connect.return_value
+    mock_cur = mock_con.cursor.return_value
+    mock_cur.__enter__.return_value.fetchall.side_effect = [
+        [(False,)],
+        urls,
+        []
+    ]
+    test_url = 'https://12232312'
+    response = client.post('/urls', data={"url": test_url}, follow_redirects=True)
+    assert 'Некорректный URL' in response.text
+
