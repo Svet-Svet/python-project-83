@@ -8,7 +8,7 @@ import validators
 import requests
 
 from page_analyzer.additional_func import normalize_url
-from page_analyzer.check import fill_answer
+from page_analyzer.check import extract_metadata
 
 from page_analyzer import db
 
@@ -99,7 +99,7 @@ def check_seo(id):
 
     parser_status_code = response.status_code
     data_html = response.text
-    h1_tag, title_tag, meta_tag = fill_answer(data_html)
+    h1_tag, title_tag, meta_tag = extract_metadata(data_html)
 
     db.add_check_info(connection, generally_id, parser_status_code,
                       h1_tag, title_tag, meta_tag)

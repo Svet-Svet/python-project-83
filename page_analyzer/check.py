@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 
 
-def fill_answer(obj_html):
+def extract_metadata(obj_html):
     soup = BeautifulSoup(obj_html, 'html.parser')
 
     h1_tag = soup.find('h1')

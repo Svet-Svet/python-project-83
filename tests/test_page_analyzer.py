@@ -7,7 +7,7 @@ from unittest import mock
 
 from page_analyzer.app import app
 from page_analyzer.additional_func import normalize_url
-from page_analyzer.check import fill_answer
+from page_analyzer.check import extract_metadata
 
 
 @pytest.fixture()
@@ -42,14 +42,14 @@ def test_normalize_url():
 
 @pytest.fixture
 def html_test_data():
-    target_output = os.path.join(os.path.dirname(__file__), 'fixtures/test_data.html')
-    with open(target_output, encoding='utf8') as f:
+    html_file = os.path.join(os.path.dirname(__file__), 'fixtures', 'test_data.html')
+    with open(html_file, encoding='utf8') as f:
         html = f.read()
     return html
 
 
 def test_checking_add_seo(html_test_data):
-    h1_tag, title_tag, str_meta = fill_answer(html_test_data)
+    h1_tag, title_tag, str_meta = extract_metadata(html_test_data)
     assert h1_tag == "Онлайн-школа программирования, за выпускниками которой охотятся компании"
     assert title_tag == "Хекслет — больше чем школа программирования. Онлайн курсы, сообщество программистов"
     assert str_meta == 'Живое онлайн сообщество программистов и разработчиков на JS, Python, Java, PHP, Ruby. Авторские программы обучения с практикой и готовыми проектами в резюме. Помощь в трудоустройстве после успешного окончания обучения'
@@ -141,16 +141,3 @@ def test_post_urls_new_url_error_flash_response(mock_connect, client):
     test_url = 'https://12232312'
     response = client.post('/urls', data={"url": test_url}, follow_redirects=True)
     assert 'Некорректный URL' in response.text
-# @mock.patch('psycopg2.connect')
-# def test_check_seo_new_success_flash_response(mock_connect, client):
-#     urls = [(1000, 'https://12232312', datetime.datetime(2022, 5, 18),)]
-#     mock_con = mock_connect.return_value
-#     mock_cur = mock_con.cursor.return_value
-#     mock_cur.__enter__.return_value.fetchall.side_effect = [
-#         [(False,)],
-#         urls,
-#         []
-#     ]
-#     test_url = 'https://12232312'
-#     response = client.post('/urls', data={"url": test_url}, follow_redirects=True)
-#     assert 'Некорректный URL' in response.text

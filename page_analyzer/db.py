@@ -33,7 +33,7 @@ def get_all_pages(connection):
             LEFT JOIN url_checks ON urls.id = url_checks.url_id
             ORDER BY urls.name, created_at_url_checks DESC
             ) AS MYTable
-            ORDER BY MYTable.id DESC;'''
+            ORDER BY MYTable.id DESC'''
         cursor.execute(get_data)
         data = cursor.fetchall()
         urls = list()
@@ -44,12 +44,12 @@ def get_all_pages(connection):
 
 def check_identity(connection, url):
     with connection.cursor() as cursor:
-        check_url = '''SELECT EXISTS (SELECT * FROM urls WHERE name = %s);'''
+        check_url = '''SELECT EXISTS (SELECT * FROM urls WHERE name = %s)'''
         cursor.execute(check_url, (url,))
         answer = cursor.fetchall()
 
         if answer[0][0]:
-            url_for_db = '''SELECT * FROM urls WHERE name = %s;'''
+            url_for_db = '''SELECT * FROM urls WHERE name = %s'''
             cursor.execute(url_for_db, (url,))
             data = cursor.fetchall()
             page = dict()
@@ -63,8 +63,7 @@ def check_identity(connection, url):
 def get_page(connection, id):
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT * FROM urls WHERE id = %s',
-            (id,)
+            'SELECT * FROM urls WHERE id = id'
         )
         data = cursor.fetchall()
         page = list()
@@ -87,8 +86,7 @@ def add_check_info(connection, id_from_url_table, status_code, h1, title, meta):
 def get_page_after_checking(connection, id):
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT * FROM url_checks WHERE url_id = %s',
-            (id,)
+            'SELECT * FROM url_checks WHERE url_id = id'
         )
         data = cursor.fetchall()
         page = list()
