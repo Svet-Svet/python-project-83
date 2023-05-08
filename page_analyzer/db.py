@@ -63,7 +63,7 @@ def check_identity(connection, url):
 def get_page(connection, id):
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT * FROM urls WHERE id = %s',
+            'SELECT id, name, created_at FROM urls WHERE id = %s',
             (id,)
         )
         data = cursor.fetchall()
@@ -87,7 +87,7 @@ def add_check_info(connection, id_from_url_table, status_code, h1, title, meta):
 def get_page_after_checking(connection, id):
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT * FROM url_checks WHERE url_id = %s',
+            'SELECT id, url_id, status_code, h1, title, description, created_at FROM url_checks WHERE url_id = %s',
             (id,)
         )
         data = cursor.fetchall()
